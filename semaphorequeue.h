@@ -93,7 +93,7 @@ bool SemaphoreQueue<T>::pop_front(T &data, int msWait)
 		pthread_mutex_unlock(&mutex_);
 		status = true;
 	}
-	return false;
+	return status;
 }
 
 template<typename T>
@@ -112,7 +112,7 @@ int SemaphoreQueue<T>::sem_wait_time( sem_t *psem, int mswait)
 		ts.tv_nsec += ( mswait % 1000 ) * 1000000; //加上等待时间纳秒数
 
 		//等待信号量，errno==EINTR屏蔽其他信号事件引起的等待中断
-		while((rs = sem_timedwait( psem, &ts)) != 0 && errno ==EINTR);
+		while((rs = sem_timedwait( psem, &ts)) != 0 && errno == EINTR);
 	}
 	return rs;
 }
