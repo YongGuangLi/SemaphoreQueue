@@ -14,7 +14,7 @@ template<typename T>
 class SemaphoreQueue
 {
 public:
-	explicit SemaphoreQueue(size_t size);
+	explicit SemaphoreQueue(size_t size = 100000);
 
 	~SemaphoreQueue();
 
@@ -35,7 +35,7 @@ private:
 };
 
 template<typename T>
-SemaphoreQueue<T>::SemaphoreQueue(size_t size = 100000)
+SemaphoreQueue<T>::SemaphoreQueue(size_t size)
 {
 	pthread_mutex_init(&mutex_, NULL);
 	sem_init( &enques_,0, size );      //入队信号量初始化为size，最多可容纳size各元素
