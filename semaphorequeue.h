@@ -18,8 +18,6 @@ public:
 
 	~SemaphoreQueue();
 
-	void set_size(size_t size);
-
 	bool push_back(const T data, int msWait = -1);
 
 	bool pop_front(T &data, int msWait = -1);
@@ -48,12 +46,6 @@ SemaphoreQueue<T>::~SemaphoreQueue()
 	pthread_mutex_destroy(&mutex_);
 	sem_destroy(&enques_);
 	sem_destroy(&deques_);
-}
-
-template<typename T>
-void SemaphoreQueue<T>::set_size(size_t size)
-{
-	sem_init( &enques_,0, size);         //入队信号量初始化为size，最多可容纳size各元素
 }
 
 template<typename T>
