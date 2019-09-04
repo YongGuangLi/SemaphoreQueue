@@ -14,9 +14,7 @@ template<typename T>
 class SemaphoreQueue
 {
 public:
-	SemaphoreQueue();
-
-	SemaphoreQueue(size_t size);
+	explicit SemaphoreQueue(size_t size);
 
 	~SemaphoreQueue();
 
@@ -35,13 +33,6 @@ private:
 	sem_t enques_;
 	sem_t deques_;
 };
-
-template<typename T>
-SemaphoreQueue<T>::SemaphoreQueue()
-{
-	pthread_mutex_init(&mutex_, NULL);
-	sem_init( &deques_,0,0 );          //队列刚开始为空，出队信号量初始为0
-}
 
 template<typename T>
 SemaphoreQueue<T>::SemaphoreQueue(size_t size)
