@@ -25,11 +25,14 @@ public:
 	int sem_wait_time( sem_t *psem, int mswait);
 
 	inline size_t size();
+	
+	void clear();
 private:
 	pthread_mutex_t mutex_;
 	queue<T> queData_;
 	sem_t enques_;
 	sem_t deques_;
+    int size_;
 };
 
 template<typename T>
@@ -38,6 +41,7 @@ SemaphoreQueue<T>::SemaphoreQueue(size_t size)
 	pthread_mutex_init(&mutex_, NULL);
 	sem_init( &enques_,0, size );      //入队信号量初始化为size，最多可容纳size各元素
 	sem_init( &deques_,0,0 );          //队列刚开始为空，出队信号量初始为0
+    size_ = size;
 }
 
 template<typename T>
@@ -103,6 +107,23 @@ int SemaphoreQueue<T>::sem_wait_time( sem_t *psem, int mswait)
 template<typename T>
 size_t SemaphoreQueue<T>::size()
 {
-	return queData_.size();
+	
+	pthread_mutex_lock(&mutex_);
+	size_t size =  queData_.size(); 
+	pthread_mutex_unlock(&mutex_);
+	return size;
 }
+
+template<typename T>
+void SemaphoreQueue<T>::clear()
+{
+	pthread_mutex_lock(&mutex_); 
+	queue<T> empty;
+	swap(empty, queData_); 
+
+    sem_init( &enques_,0, size_ );      //入队信号量初始化为size，最多可容纳size各元素
+    sem_init( &deques_,0,0 );           //队列刚开始为空，出队信号量初始为0
+	pthread_mutex_unlock(&mutex_);
+}
+
 #endif
